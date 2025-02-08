@@ -4,6 +4,8 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const { CommandKit } = require("commandkit");
 const { SlashCommandBuilder } = require("commandkit");
 const keep_alive = require("./keep_alive");
+global.messages = 300;
+global.time = 30;
 
 const client = new Client({
   intents: [
