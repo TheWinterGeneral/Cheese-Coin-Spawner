@@ -15,18 +15,18 @@ let messages = 0;
 let resetInterval;
 
 // Function to start/reset the interval
-function startResetInterval() {
-  // Clear existing interval if any
+function startResetInterval(client) {
   if (resetInterval) {
     clearInterval(resetInterval);
   }
-  // Start new interval
-  resetInterval = setInterval(
-    () => {
-      messages = 0;
-    },
-    global.time * 60 * 1000,
-  );
+
+  const timeInMs = (client.settings?.time || 60) * 1000; // Default to 60 seconds if not set
+  console.log(`Setting interval for ${timeInMs}ms`);
+
+  resetInterval = setInterval(() => {
+    console.log("Resetting messages count");
+    messages = 0;
+  }, timeInMs);
 }
 
 const dropMessages = [
@@ -53,7 +53,7 @@ const handleInteraction = async (interaction) => {
     const specificUser =
       await interaction.client.users.fetch("868151299152162846");
     const notificationChannel = await interaction.client.channels.fetch(
-      "1335808569848762419", 
+      "1337571423199301703",
     );
 
     // Create a DM embed
@@ -166,7 +166,7 @@ module.exports = (message, client) => {
   console.log(`Message sent at ${new Date().toLocaleTimeString()}`);
   console.log(`Messages: ${messages}`);
 
-  if (messages >= global.messages) {
+  if (messages >= client.settings?.messages || 5) {
     const button = new ButtonBuilder()
       .setCustomId("collect_coins")
       .setLabel("Collect Cheese Coins")
