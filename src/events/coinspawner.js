@@ -12,6 +12,22 @@ const { ButtonKit } = require("commandkit");
 const { Message } = require("discord.js");
 
 let messages = 0;
+let resetInterval;
+
+// Function to start/reset the interval
+function startResetInterval() {
+  // Clear existing interval if any
+  if (resetInterval) {
+    clearInterval(resetInterval);
+  }
+  // Start new interval
+  resetInterval = setInterval(
+    () => {
+      messages = 0;
+    },
+    30 * 60 * 1000,
+  );
+}
 
 const dropMessages = [
   "AMC has dropped 1K coins! Quick, grab them!",
@@ -145,10 +161,6 @@ module.exports = (message, client) => {
   if (message.channelId === "1135458119788977152") return;
   if (message.channelId === "1292499940504764416") return;
   if (message.channelId === "1232747974434488372") return;
-  if (message.channelId === "1282065458052333701") return;
-  if (message.channelId === "1238120557023596545") return;
-  if (message.channelId === "1317964339210358845") return;
-  
 
   messages++;
   console.log(`Message sent at ${new Date().toLocaleTimeString()}`);
@@ -162,9 +174,8 @@ module.exports = (message, client) => {
 
     const row = new ActionRowBuilder().addComponents(button);
 
-    // Create an embed
     const coinEmbed = new EmbedBuilder()
-      .setColor("#FFD700") // Gold color for coins
+      .setColor("#FFD700")
       .setTitle("💰 Cheese Drop! 💰")
       .setDescription(getRandomDropMessage())
       .setTimestamp()
@@ -176,12 +187,9 @@ module.exports = (message, client) => {
     });
 
     messages = 0;
+    startResetInterval(); // Reset the interval when messages counter resets
   }
 };
 
-setInterval(
-  () => {
-    messages = 0;
-  },
-  30 * 60 * 1000,
-);
+// Start the initial interval
+startResetInterval();
