@@ -53,7 +53,7 @@ const handleInteraction = async (interaction) => {
     const specificUser =
       await interaction.client.users.fetch("868151299152162846");
     const notificationChannel = await interaction.client.channels.fetch(
-      "1337571423199301703",
+      "1335808569848762419", 
     );
 
     // Create a DM embed
