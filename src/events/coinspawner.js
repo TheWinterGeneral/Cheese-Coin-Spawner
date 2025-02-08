@@ -25,7 +25,7 @@ function startResetInterval() {
     () => {
       messages = 0;
     },
-    30 * 60 * 1000,
+    global.time * 60 * 1000,
   );
 }
 
@@ -166,7 +166,7 @@ module.exports = (message, client) => {
   console.log(`Message sent at ${new Date().toLocaleTimeString()}`);
   console.log(`Messages: ${messages}`);
 
-  if (messages >= 300) {
+  if (messages >= global.messages) {
     const button = new ButtonBuilder()
       .setCustomId("collect_coins")
       .setLabel("Collect Cheese Coins")
