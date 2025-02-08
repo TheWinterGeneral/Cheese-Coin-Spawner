@@ -2,10 +2,12 @@ require("dotenv/config");
 const messageCounter = require("./events/coinspawner.js");
 const { Client, GatewayIntentBits } = require("discord.js");
 const { CommandKit } = require("commandkit");
-const { SlashCommandBuilder } = require("commandkit");
 const keep_alive = require("./keep_alive");
-global.messages = 300;
-global.time = 30;
+
+client.settings = {
+  messages: 5, // default value
+  time: 60, // default value in seconds
+};
 
 const client = new Client({
   intents: [
