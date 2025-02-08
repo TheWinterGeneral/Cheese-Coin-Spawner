@@ -34,5 +34,10 @@ module.exports = {
         ephemeral: true
       });
     }
+  },  
+  options: {
+    devOnly: false,
+    userPermissions: ['ManageRoles'],
+    botPermissions: ['ManageRoles'],
   },
 };
