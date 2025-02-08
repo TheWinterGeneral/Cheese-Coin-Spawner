@@ -1,3 +1,5 @@
+const { ApplicationCommandType } = require("discord.js");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("config")
