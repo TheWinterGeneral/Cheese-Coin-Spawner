@@ -1,5 +1,5 @@
 const { ApplicationCommandType } = require("discord.js");
-const { SlashCommandBuilder ) = require("commandkit");
+const { SlashCommandBuilder } = require("commandkit");
 
 module.exports = {
   data: new SlashCommandBuilder()
