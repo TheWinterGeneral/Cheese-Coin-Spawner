@@ -145,6 +145,10 @@ module.exports = (message, client) => {
   if (message.channelId === "1135458119788977152") return;
   if (message.channelId === "1292499940504764416") return;
   if (message.channelId === "1232747974434488372") return;
+  if (message.channelId === "1282065458052333701") return;
+  if (message.channelId === "1238120557023596545") return;
+  if (message.channelId === "1317964339210358845") return;
+  
 
   messages++;
   console.log(`Message sent at ${new Date().toLocaleTimeString()}`);
