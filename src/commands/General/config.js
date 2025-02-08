@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { updateInterval } = require("../events/coinspawner.js"); // Adjust path as needed
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,58 +23,28 @@ module.exports = {
     ),
 
   run: async ({ interaction, client, handler }) => {
-    try {
-      // Check if user has permission
-      if (
-        !interaction.member.permissions.has(PermissionFlagsBits.ManageRoles)
-      ) {
-        return await interaction.reply({
-          content: "You don't have permission to use this command!",
-          ephemeral: true,
-        });
-      }
+    await interaction.deferReply({ ephemeral: true });
 
+    try {
       const messagesCount = interaction.options.getNumber("messages");
       const timeValue = interaction.options.getNumber("time");
 
-      // Validate inputs
-      if (!messagesCount || !timeValue) {
-        return await interaction.reply({
-          content: "Invalid input values. Please provide valid numbers.",
-          ephemeral: true,
-        });
-      }
-
-      // Log the values before setting
-      console.log("Setting new values:", {
+      // Update client settings
+      client.settings = {
         messages: messagesCount,
         time: timeValue,
-      });
+      };
 
-      // Store the values
-      try {
-        global.messages = messagesCount;
-        global.time = timeValue;
-      } catch (e) {
-        console.error("Error setting global variables:", e);
-        throw new Error("Failed to set global variables");
-      }
+      // Update the interval
+      updateInterval(client, timeValue);
 
-      // Verify the values were set
-      console.log("New values set:", {
-        messages: global.messages,
-        time: global.time,
-      });
-
-      await interaction.reply({
-        content: `Configuration successfully updated:\nTime: ${global.time} seconds\nMessages Required: ${global.messages}`,
-        ephemeral: true,
+      await interaction.editReply({
+        content: `Configuration successfully updated:\nTime: ${timeValue} seconds\nMessages Required: ${messagesCount}`,
       });
     } catch (error) {
-      console.error("Detailed error:", error);
-      await interaction.reply({
-        content: `There was an error while updating the configuration: ${error.message}`,
-        ephemeral: true,
+      console.error("Configuration error:", error);
+      await interaction.editReply({
+        content: "There was an error while updating the configuration.",
       });
     }
   },
