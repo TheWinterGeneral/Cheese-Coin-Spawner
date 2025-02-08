@@ -1,14 +1,17 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("config")
     .setDescription("Configure the messages required and time to spawn coins")
-    .addNumberOption((option) =>
-      option
-        .setName("time")
-        .setDescription("The time that the bot takes to reset")
-        .setRequired(true),
+    .addNumberOption(
+      (option) =>
+        option
+          .setName("time")
+          .setDescription("The time that the bot takes to reset (in seconds)")
+          .setRequired(true)
+          .setMinValue(1)
+          .setMaxValue(3600), // For example, max 1 hour
     )
     .addNumberOption((option) =>
       option
@@ -23,21 +26,23 @@ module.exports = {
       global.messages = interaction.options.getNumber("messages");
       global.time = interaction.options.getNumber("time");
 
+      await db.setConfig(interaction.guildId, { messages, time });
       await interaction.reply({
-        content: `Configuration updated:\nTime: ${global.time}\nMessages: ${global.messages}`,
-        ephemeral: true
+        content: `Configuration updated:\nTime: ${time}\nMessages: ${messages}`,
+        ephemeral: true,
       });
     } catch (error) {
       console.error(error);
       await interaction.reply({
         content: "There was an error while updating the configuration.",
-        ephemeral: true
+        ephemeral: true,
       });
     }
-  },  
+  },
+
   options: {
     devOnly: false,
-    userPermissions: ['ManageRoles'],
-    botPermissions: ['ManageRoles'],
+    userPermissions: ["ManageRoles"],
+    botPermissions: ["ManageRoles"],
   },
 };
