@@ -21,4 +21,10 @@ module.exports = {
 
     interaction.reply(`Done ${global.time} ${global.messages}`);
   },
+   
+  options: {
+    devOnly: false,
+    userPermissions: ['Administrator'],
+    deleted: false,
+  },
 };
