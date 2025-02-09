@@ -4,11 +4,6 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const { CommandKit } = require("commandkit");
 const keep_alive = require("./keep_alive");
 
-client.settings = {
-  messages: 5, // default value
-  time: 60, // default value in seconds
-};
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds, // Server events
@@ -19,6 +14,11 @@ const client = new Client({
     GatewayIntentBits.DirectMessages, // DM events
   ],
 });
+
+client.settings = {
+  messages: 5, // default messages
+  time: 60 * 60, // default 60 minutes (in seconds)
+};
 
 new CommandKit({
   client,
