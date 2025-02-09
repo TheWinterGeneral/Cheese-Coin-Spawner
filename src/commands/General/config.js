@@ -1,57 +1,52 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const { updateInterval } = require("../events/coinspawner.js"); // Adjust path as needed
+require("dotenv/config");
+const { Client, GatewayIntentBits } = require("discord.js");
+const { CommandKit } = require("commandkit");
+const keep_alive = require("./keep_alive");
 
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("config")
-    .setDescription("Configure the messages required and time to spawn coins")
-    .addNumberOption((option) =>
-      option
-        .setName("time")
-        .setDescription("The time that the bot takes to reset (in seconds)")
-        .setRequired(true)
-        .setMinValue(1)
-        .setMaxValue(3600),
-    )
-    .addNumberOption((option) =>
-      option
-        .setName("messages")
-        .setDescription("The number of messages required")
-        .setRequired(true)
-        .setMinValue(1)
-        .setMaxValue(500),
-    ),
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds, // Server events
+    GatewayIntentBits.GuildMessages, // Message events
+    GatewayIntentBits.MessageContent, // Message content
+    GatewayIntentBits.GuildMembers, // Member events
+    GatewayIntentBits.GuildPresences, // Presence updates
+    GatewayIntentBits.DirectMessages, // DM events
+  ],
+});
 
-  run: async ({ interaction, client, handler }) => {
-    await interaction.deferReply({ ephemeral: true });
+client.settings = {
+  messages: 5, // default messages
+  time: 60 * 60, // default 60 minutes (in seconds)
+};
 
-    try {
-      const messagesCount = interaction.options.getNumber("messages");
-      const timeValue = interaction.options.getNumber("time");
+new CommandKit({
+  client,
+  eventsPath: `${__dirname}/events`,
+  commandsPath: `${__dirname}/commands`,
+});
+client.on("messageCreate", (message) => {
+  messageCounter(message, client);
+});
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isButton() || interaction.customId !== "dm_user") return;
 
-      // Update client settings
-      client.settings = {
-        messages: messagesCount,
-        time: timeValue,
-      };
-
-      // Update the interval
-      updateInterval(client, timeValue);
-
-      await interaction.editReply({
-        content: `Configuration successfully updated:\nTime: ${timeValue} seconds\nMessages Required: ${messagesCount}`,
-      });
-    } catch (error) {
-      console.error("Configuration error:", error);
-      await interaction.editReply({
-        content: "There was an error while updating the configuration.",
+  try {
+    const specificUser = await client.users.fetch("868151299152162846");
+    await specificUser.send(`<@${interaction.user.id}> Got 1K coins`);
+    await interaction.reply({
+      content: "Successfully told Lob you got the coins",
+    });
+  } catch (error) {
+    console.error(error);
+    // Only reply if the interaction hasn't been replied to yet
+    if (!interaction.replied) {
+      await interaction.reply({
+        content: "There was an error processing your request.",
       });
     }
-  },
+  }
+});
 
-  options: {
-    devOnly: false,
-    userPermissions: ["ManageRoles"],
-    botPermissions: ["ManageRoles"],
-  },
-};
+client.login(
+  "MTMzNzU2NTAzODk0NDE5MDQ5NA.GCzHyf.t0PktoaBTKOL0WLpf30fMJ93VWVzRlayOJojA0",
+);
