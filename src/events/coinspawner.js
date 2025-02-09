@@ -7,23 +7,25 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 
-let resetInterval;
+
 let messages = 0;
-function startResetInterval(client) {
-  if (resetInterval) {
-    clearInterval(resetInterval);
-  }
+let resetInterval;
 
-  const timeInMinutes = client?.settings?.time ? client.settings.time / 60 : 60;
-  const timeInMs = timeInMinutes * 60 * 1000;
+const startResetInterval = (client) => {
+    if (resetInterval) {
+        clearInterval(resetInterval);
+    }
 
-  console.log(`Setting interval for ${timeInMinutes} minutes`);
+    const timeInMinutes = client?.settings?.time ? client.settings.time / 60 : 60;
+    const timeInMs = timeInMinutes * 60 * 1000;
+    
+    console.log(`Setting interval for ${timeInMinutes} minutes`);
 
-  resetInterval = setInterval(() => {
-    console.log("Resetting messages count");
-    messages = 0;
-  }, timeInMs);
-}
+    resetInterval = setInterval(() => {
+        console.log('Resetting messages count');
+        client.messageCounter = 0;
+    }, timeInMs);
+};
 
 const dropMessages = [
   "AMC has dropped 1K coins! Quick, grab them!",
