@@ -8,7 +8,7 @@ const {
 } = require("discord.js");
 
 let resetInterval;
-
+let messages = 0;
 function startResetInterval(client) {
   if (resetInterval) {
     clearInterval(resetInterval);
@@ -21,7 +21,7 @@ function startResetInterval(client) {
 
   resetInterval = setInterval(() => {
     console.log("Resetting messages count");
-    client.messageCounter = 0;
+    messages = 0;
   }, timeInMs);
 }
 
@@ -76,7 +76,7 @@ module.exports = (message, client) => {
         components: [row],
       });
 
-      client.messageCounter = 0;
+      messages = 0;
       startResetInterval(client);
     }
   };
