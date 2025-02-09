@@ -1,5 +1,5 @@
 require("dotenv/config");
-const messageCounter = require("./events/coinspawner.js");
+const messageCounter = require("./events/coinspawner");
 const { Client, GatewayIntentBits } = require("discord.js");
 const { CommandKit } = require("commandkit");
 const keep_alive = require("./keep_alive");
