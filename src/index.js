@@ -16,8 +16,7 @@ client.settings = {
   time: 60 * 60,
 };
 
-// Initialize message counter
-client.messageCounter = 0;
+
 
 new CommandKit({
   client,
