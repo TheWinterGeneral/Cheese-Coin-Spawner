@@ -1,85 +1,44 @@
-const {
-  Client,
-  GatewayIntentBits,
-  ButtonBuilder,
-  ButtonStyle,
-  ActionRowBuilder,
-  EmbedBuilder,
-} = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
+const { CommandKit } = require("commandkit");
+const path = require("path");
 
-let resetInterval;
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
-function startResetInterval(client) {
-  if (resetInterval) {
-    clearInterval(resetInterval);
-  }
-
-  const timeInMinutes = client?.settings?.time ? client.settings.time / 60 : 60;
-  const timeInMs = timeInMinutes * 60 * 1000;
-
-  console.log(`Setting interval for ${timeInMinutes} minutes`);
-
-  resetInterval = setInterval(() => {
-    console.log("Resetting messages count");
-    client.messageCounter = 0;
-  }, timeInMs);
-}
-
-const dropMessages = [
-  "AMC has dropped 1K coins! Quick, grab them!",
-  "The Cheese Cartel hid their evidence and you found it, here is 1K coins!",
-  "The Lobble bank has lost 1K coins, here they are!",
-  "WinterGeneral's bot glitched, here is 1k coins",
-  "Roxxy sold a UGC and dropped 1K coins!",
-  "Flop was being a retard and lost 1k coins!",
-];
-
-const getRandomDropMessage = () => {
-  const randomIndex = Math.floor(Math.random() * dropMessages.length);
-  return dropMessages[randomIndex];
+// Initialize settings
+client.settings = {
+  messages: 5,
+  time: 60 * 60,
 };
 
-module.exports = (message, client) => {
-  // ... rest of your existing code ...
+// Initialize message counter
+client.messageCounter = 0;
 
-  module.exports = (message, client) => {
-    // Only start the interval when we actually have a client
-    if (!resetInterval && client) {
-      startResetInterval(client);
-    }
+new CommandKit({
+  client,
+  commandsPath: path.join(__dirname, "commands"),
+  eventsPath: path.join(__dirname, "events"),
+});
 
-    if (message.author.bot) return;
-    // ... your channel checks ...
+// Message event handler
+client.on("messageCreate", (message) => {
+  if (message.author.bot) return;
 
-    messages++;
-    console.log(`Message sent at ${new Date().toLocaleTimeString()}`);
-    console.log(`Messages: ${messages}`);
+  // Get the coinSpawner module
+  const coinSpawner = require("./events/coinspawner");
+  // Pass the message and client to the coinSpawner
+  coinSpawner(message, client);
+});
 
-    const requiredMessages = client?.settings?.messages || 5; // Default to 5 if not set
-    if (client.messageCounter >= (client.settings?.messages || 5)) {
-      const button = new ButtonBuilder()
-        .setCustomId("collect_coins")
-        .setLabel("Collect Cheese Coins")
-        .setStyle(ButtonStyle.Primary);
+client.once("ready", () => {
+  console.log(`Logged in as ${client.user.tag}`);
+  const coinSpawner = require("./events/coinspawner");
+  coinSpawner.startResetInterval(client);
+});
 
-      const row = new ActionRowBuilder().addComponents(button);
-
-      const coinEmbed = new EmbedBuilder()
-        .setColor("#FFD700")
-        .setTitle("💰 Cheese Drop! 💰")
-        .setDescription(getRandomDropMessage())
-        .setTimestamp()
-        .setFooter({ text: "Be quick to collect!" });
-
-      message.channel.send({
-        embeds: [coinEmbed],
-        components: [row],
-      });
-
-      client.messageCounter = 0;
-      startResetInterval(client);
-    }
-  };
-
-  module.exports.startResetInterval = startResetInterval;
-};
+client.login(process.env.TOKEN);
