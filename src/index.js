@@ -27,7 +27,7 @@ client.commands = new Collection();
 client.settings = {
   messages: 100,
   time: 30,
-  coins: 1000;
+  coins: 1000,
 };
 
 // Initialize CommandKit
