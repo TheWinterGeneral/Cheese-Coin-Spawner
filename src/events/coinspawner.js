@@ -8,7 +8,7 @@ const {
 let messages = 0;
 let resetInterval;
 let activeDrops = new Set(); // To track active drops
-const coinsGained = client?.settings?.coins;
+let coinsGained = client?.settings?.coins;
 
 
 const startResetInterval = (client) => {
@@ -16,8 +16,8 @@ const startResetInterval = (client) => {
     clearInterval(resetInterval);
   }
 
-  const timeInMinutes = client?.settings?.time;
-  const timeInMs = timeInMinutes * 60 * 1000;
+  let timeInMinutes = client?.settings?.time;
+  let timeInMs = timeInMinutes * 60 * 1000;
 
   console.log(`Setting interval for ${timeInMinutes} minutes`);
   
