@@ -21,6 +21,14 @@ module.exports = {
         .setMinValue(1)
         .setMaxValue(800),
     )
+    .addIntegerOption((option) =>
+      option
+        .setName("Coins")
+        .setDescription("The number of coins gained")
+        .setRequired(true)
+        .setMinValue(1)
+        .setMaxValue(2000),
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
   run: async ({ interaction, client }) => {
@@ -34,10 +42,12 @@ module.exports = {
     try {
       const messagesCount = interaction.options.getInteger("messages");
       const timeValueMinutes = interaction.options.getInteger("time");
+      const coinsGained = interaction.options.getInteger("Coins");
 
       client.settings = {
         messages: messagesCount,
         time: timeValueMinutes,
+        coins: coinsGained,
       };
 
       startResetInterval(client);
