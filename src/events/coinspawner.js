@@ -8,7 +8,7 @@ const {
 let messages = 0;
 let resetInterval;
 let activeDrops = new Set(); // To track active drops
-const coinsGained = client?.settings?.coins
+const coinsGained = client?.settings?.coins;
 
 
 const startResetInterval = (client) => {
