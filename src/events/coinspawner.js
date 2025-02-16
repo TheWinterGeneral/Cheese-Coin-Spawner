@@ -8,6 +8,8 @@ const {
 let messages = 0;
 let resetInterval;
 let activeDrops = new Set(); // To track active drops
+const coinsGained = client?.settings?.coins
+
 
 const startResetInterval = (client) => {
   if (resetInterval) {
@@ -56,7 +58,6 @@ const handleCollectButton = async (interaction) => {
     activeDrops.delete(messageId);
 
     const collector = interaction.user;
-    const coinsGained = client?.settings?.coins
     // First, reply to the interaction
     await interaction.reply({
       content: `You collected ${coinsGained} cheese coins! 🧀`,
