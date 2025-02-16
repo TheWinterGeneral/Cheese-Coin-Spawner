@@ -18,7 +18,7 @@ const startResetInterval = (client) => {
   const timeInMs = timeInMinutes * 60 * 1000;
 
   console.log(`Setting interval for ${timeInMinutes} minutes`);
-
+  
   resetInterval = setInterval(() => {
     console.log("Resetting messages count");
     client.messageCounter = 0;
@@ -56,10 +56,10 @@ const handleCollectButton = async (interaction) => {
     activeDrops.delete(messageId);
 
     const collector = interaction.user;
-
+    const coinsGained = client?.settings?.coins
     // First, reply to the interaction
     await interaction.reply({
-      content: "You collected 1,000 cheese coins! 🧀",
+      content: `You collected ${coinsGained} cheese coins! 🧀`,
       ephemeral: true,
     });
 
@@ -75,7 +75,7 @@ const handleCollectButton = async (interaction) => {
           .has(["SendMessages", "ViewChannel"])
       ) {
         await logChannel.send({
-          content: `${collector.toString()} collected 1,000 cheese coins! 🧀`,
+          content: `${collector.toString()} collected ${coinsGained} cheese coins! 🧀`,
         });
       } else {
         console.log(
@@ -92,7 +92,7 @@ const handleCollectButton = async (interaction) => {
       const specificUser =
         await interaction.client.users.fetch("868151299152162846");
       await specificUser.send({
-        content: `${collector.toString()} collected 1,000 cheese coins in ${interaction.channel.name}! 🧀`,
+        content: `${collector.toString()} collected ${coinsGained} cheese coins in ${interaction.channel.name}! 🧀`,
       });
     } catch (error) {
       console.log("Couldn't send DM to specific user");
