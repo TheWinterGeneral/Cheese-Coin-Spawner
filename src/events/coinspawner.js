@@ -8,8 +8,6 @@ const {
 let messages = 0;
 let resetInterval;
 let activeDrops = new Set(); // To track active drops
-let coinsGained = client?.settings?.coins;
-
 
 const startResetInterval = (client) => {
   if (resetInterval) {
@@ -41,9 +39,11 @@ const getRandomDropMessage = () => {
 };
 
 // Button handler function
-const handleCollectButton = async (interaction) => {
+const handleCollectButton = async (interaction, client) => {
   try {
     const messageId = interaction.message.id;
+
+    let coinsGained = client?.settings?.coins;
 
     // Check if drop is still active
     if (!activeDrops.has(messageId)) {
