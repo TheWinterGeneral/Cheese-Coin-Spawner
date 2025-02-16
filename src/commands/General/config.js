@@ -23,7 +23,7 @@ module.exports = {
     )
     .addIntegerOption((option) =>
       option
-        .setName("Coins")
+        .setName("coins")
         .setDescription("The number of coins gained")
         .setRequired(true)
         .setMinValue(1)
@@ -42,7 +42,7 @@ module.exports = {
     try {
       const messagesCount = interaction.options.getInteger("messages");
       const timeValueMinutes = interaction.options.getInteger("time");
-      const coinsGained = interaction.options.getInteger("Coins");
+      const coinsGained = interaction.options.getInteger("coins");
 
       client.settings = {
         messages: messagesCount,
@@ -53,7 +53,7 @@ module.exports = {
       startResetInterval(client);
 
       await interaction.reply({
-        content: `Configuration successfully updated:\nTime: ${timeValueMinutes} minutes\nMessages Required: ${messagesCount}`,
+        content: `Configuration successfully updated:\nTime: ${timeValueMinutes} minutes\nMessages Required: ${messagesCount} Coins: ${coinsGained}`,
         ephemeral: true,
       });
     } catch (error) {
