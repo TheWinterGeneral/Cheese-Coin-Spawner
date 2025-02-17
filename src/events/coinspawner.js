@@ -102,7 +102,7 @@ const handleCollectButton = async (interaction) => {
     const collectedEmbed = new EmbedBuilder()
       .setColor("#808080")
       .setTitle("💰 Cheese Drop Collected! 💰")
-      .setDescription(`${collector.toString()} collected 1,000 cheese coins!`)
+      .setDescription(`${collector.toString()} collected ${coinsGained} cheese coins!`)
       .setTimestamp()
       .setFooter({ text: "This drop has been claimed" });
 
