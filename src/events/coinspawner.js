@@ -39,9 +39,10 @@ const getRandomDropMessage = () => {
 };
 
 // Button handler function
-const handleCollectButton = async (interaction, client) => {
+const handleCollectButton = async (interaction) => {
   try {
     const messageId = interaction.message.id;
+    const client = interaction.client; // Ensure client is obtained from interaction
 
     let coinsGained = client?.settings?.coins;
 
@@ -66,13 +67,11 @@ const handleCollectButton = async (interaction, client) => {
 
     // Send to specific channel with error handling
     try {
-      const logChannel = interaction.client.channels.cache.get(
-        "1335808569848762419",
-      );
+      const logChannel = client.channels.cache.get("1335808569848762419");
       if (
         logChannel &&
         logChannel
-          .permissionsFor(interaction.client.user)
+          .permissionsFor(client.user)
           .has(["SendMessages", "ViewChannel"])
       ) {
         await logChannel.send({
@@ -90,8 +89,7 @@ const handleCollectButton = async (interaction, client) => {
 
     // Send DM to specific user with error handling
     try {
-      const specificUser =
-        await interaction.client.users.fetch("868151299152162846");
+      const specificUser = await client.users.fetch("868151299152162846");
       await specificUser.send({
         content: `${collector.toString()} collected ${coinsGained} cheese coins in ${interaction.channel.name}! 🧀`,
       });
