@@ -4,8 +4,9 @@ module.exports = {
   run: async ({ interaction, client }) => {
     try {
       // Add your coin collection logic here
+      let coinsGained = client?.settings?.coins
       await interaction.reply({
-        content: "You collected 1,000 cheese coins! 🧀",
+        content: `You collected ${coinsGained} cheese coins! 🧀`,
         ephemeral: true,
       });
 
